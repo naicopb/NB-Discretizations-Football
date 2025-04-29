@@ -12,7 +12,7 @@ from decimal import Decimal
 client = MongoClient('localhost:27017')
 db = client.primera_y_segunda
 
-def main():
+def main(particiones):
     liga = 'primera_division'
     historical = convertInArray(getHistorical('primera_division'))
     arrayRespuesta = []
@@ -70,6 +70,7 @@ def main():
         arrayRespuesta = addElementsDe(arrayRespuesta, neoArray)
 
     neoArray = arrayRespuesta.copy()
+    neoArray = addClasiffications(neoArray, particiones)
 
     #calculo todas las probabilidades
     if liga == 'primera_division':
@@ -89,21 +90,30 @@ def main():
 
     for i in range(0, len(neoArray)):
         if neoArray[i]['numero_partido'] > numeroDePartidosAExcepcionar:
-            neoArray[i]['probabilidad_total_empate'] = calculaProbabilidad(neoArray[i]['node3_goals_expectative'], array_goles_X, array_goles_NX, neoArray[i]['node1_homeTeam_position'] - neoArray[i]['node1_awayTeam_position'], array_node1_X, array_node1_NX, neoArray[i]['node2_homeTeam_position'] - neoArray[i]['node2_awayTeam_position'], array_node2_X, array_node2_NX, counterEmpates, counterPartidos)
+            neoArray[i]['probabilidad_total_empate'] = calculaProbabilidad(neoArray[i]['node3_goals_expectative'], array_goles_X, array_goles_NX, convertIntoRankingNumber(neoArray[i]['node1_homeTeam_rango'], neoArray[i]['node1_awayTeam_rango']), array_node1_X, array_node1_NX, convertIntoRankingNumber(neoArray[i]['node2_homeTeam_rango'], neoArray[i]['node2_awayTeam_rango']), array_node2_X, array_node2_NX, counterEmpates, counterPartidos)
             counterPartidos += 1
+
             if neoArray[i]['winner'] == 'D':
                 array_goles_X.append(neoArray[i]['node3_goals_expectative'])
-                array_node1_X.append(neoArray[i]['node1_homeTeam_position'] - neoArray[i]['node1_awayTeam_position'])
-                array_node2_X.append(neoArray[i]['node2_homeTeam_position'] - neoArray[i]['node2_awayTeam_position'])
+                array_node1_X.append(convertIntoRankingNumber(neoArray[i]['node1_homeTeam_rango'], neoArray[i]['node1_awayTeam_rango']))
+                array_node2_X.append(convertIntoRankingNumber(neoArray[i]['node2_homeTeam_rango'],neoArray[i]['node2_awayTeam_rango']))
                 counterEmpates += 1
             else:
                 array_goles_NX.append(neoArray[i]['node3_goals_expectative'])
-                array_node1_NX.append(neoArray[i]['node1_homeTeam_position'] - neoArray[i]['node1_awayTeam_position'])
-                array_node2_NX.append(neoArray[i]['node2_homeTeam_position'] - neoArray[i]['node2_awayTeam_position'])
+                array_node1_NX.append(convertIntoRankingNumber(neoArray[i]['node1_homeTeam_rango'], neoArray[i]['node1_awayTeam_rango']))
+                array_node2_NX.append(convertIntoRankingNumber(neoArray[i]['node2_homeTeam_rango'], neoArray[i]['node2_awayTeam_rango']))
         else:
             neoArray[i]['probabilidad_total_empate'] = 0
     #print(neoArray)
     return neoArray
+
+def convertIntoRankingNumber(a, b):
+    for i in range(0, 5):
+        for j in range(0, 5):
+            if a == i and b == j:
+                return i*5+j
+    print('EHHH!!! no he asignado rango')
+
 
 def addElementsDe(arrayOriginal, arrayParaAdd):
     for element in arrayParaAdd:
@@ -319,4 +329,4 @@ def getHistorical(liga):
         platform_specific_module = None
         return ('Ha habido un error')
 
-#main()
+#main([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16], [17, 18, 19, 20]])

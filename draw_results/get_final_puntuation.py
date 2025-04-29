@@ -6,23 +6,30 @@ from auxiliars._5_red_neuronal import main as getPartidosRedNeuronal
 from auxiliars._6_dixonycoles import main as getDixonColes
 
 def main():
+    temporadas = ['2014-2015', '2015-2016', '2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022']
+    #temporadas = ['2014-2015', '2015-2016','2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022']
+
+    particionIgualMagnitud = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18, 19]]
+
     # 1 Calculo mi clustering y lo puntuacion
     particionClusterNB = [[0, 1, 2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12], [13, 14, 15], [16, 17, 18, 19]]
-    puntuacionClusterNB = getPuntuacion(getAssociationWithProbabilities(particionClusterNB))
+    puntuacionClusterNB = getPuntuacion(isInTemporadas(getAssociationWithProbabilities(particionClusterNB), temporadas))
+
     # 2 Calculo el puntuacion con discretización kmeans
     particionKmeans = [[0, 1, 2, 3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18, 19]]
-    puntuacionKmeans = getPuntuacion(getAssociationWithProbabilities(particionKmeans))
+    puntuacionKmeans = getPuntuacion(isInTemporadas(getAssociationWithProbabilities(particionKmeans), temporadas))
+
     # 3 Calculo el puntuacion tomando todos los componentes como continuos
-    puntuacionComponentesContinuos = getPuntuacion(getPartidosVersionContinua())
+    puntuacionComponentesContinuos = getPuntuacion(isInTemporadas(getPartidosVersionContinua(particionIgualMagnitud), temporadas))
 
-    puntuacionRedNeuronal = getPuntuacion(getPartidosRedNeuronal())
+    puntuacionRedNeuronal = getPuntuacion(isInTemporadas(getPartidosRedNeuronal(), temporadas))
 
-    puntuacionRedTAN = getPuntuacion(getPartidosTAN())
+    puntuacionRedTAN = getPuntuacion(isInTemporadas(getPartidosTAN(), temporadas))
 
-    puntuacionDixonColes = getPuntuacion(getDixonColes())
+    puntuacionDixonColes = getPuntuacion(isInTemporadas(getDixonColes(), temporadas))
 
     particionClusterFayyad = [[0, 1, 2, 3], [4, 5, 6, 7], [ 8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18, 19]]
-    puntuacionClusterFayyad = getPuntuacion(getAssociationWithProbabilities(particionClusterFayyad))
+    puntuacionClusterFayyad = getPuntuacion(isInTemporadas(getAssociationWithProbabilities(particionClusterFayyad), temporadas))
 
     print('1.1. puntuacion del modelo con discretización naive-bayes')
     print(puntuacionClusterNB)
@@ -53,6 +60,14 @@ def main():
     print('3.3. puntuacion del modelo Fayyad')
     print(puntuacionClusterFayyad)
     print(media(puntuacionClusterFayyad))
+
+def isInTemporadas(arrayPartidos, temporadas):
+    neoArray = []
+    for temporada in temporadas:
+        for i in range(0, len(arrayPartidos)):
+            if arrayPartidos[i]['temporada'] == temporada:
+                neoArray.append(arrayPartidos[i])
+    return neoArray
 
 
 def media(arr):

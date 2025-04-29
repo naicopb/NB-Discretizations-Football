@@ -4,7 +4,7 @@ db = client.primera_y_segunda
 import csv
 
 def main ():
-    with open('./data/16-17_primera.csv') as csv_file:
+    with open('./data/22-23_primera.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         array_de_objetos = []
         line_count = 0
@@ -16,7 +16,7 @@ def main ():
                 line_count += 1
             else:
                 object = {}
-                object['temporada'] = '2016-2017'
+                object['temporada'] = '2022-2023'
                 object['liga'] = 'primera_division'
                 object['numero_partido'] = line_count
                 for i in range(0, len(array_keys)):

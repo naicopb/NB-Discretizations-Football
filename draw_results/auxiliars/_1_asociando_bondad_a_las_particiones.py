@@ -338,7 +338,7 @@ def getWeek(fecha):
             valorActual += multiplicador_cuatro
         if valorActual > fecha:
             return i
-            
+
 def esDerbyRegional(partido):
     array = ['Sociedad - Ath Bilbao', 'Levante - Valencia', 'Celta - La Coruna', 'Sevilla - Betis', 'Sociedad - Osasuna', 'Real Madrid - Ath Madrid', 'Malaga - Granada', 'Barcelona - Espanol', 'Vallecano - Getafe', 'Ath Bilbao - Sociedad', 'Valencia - Levante', 'La Coruna - Celta', 'Betis - Sevilla', 'Osasuna - Sociedad', 'Ath Madrid - Real Madrid', 'Granada - Malaga', 'Espanol - Barcelona', 'Getafe - Vallecano', 'Malaga - Almeria', 'Villarreal - Valencia', 'Almeria - Granada', 'Almeria - Malaga', 'Valencia - Villarreal', 'Granada - Almeria', 'Eibar - Sociedad', 'Sociedad - Eibar', 'Ath Bilbao - Alaves', 'Alaves - Ath Bilbao', 'Leganes - Getafe', 'Getafe - Leganes']
     return partido in array

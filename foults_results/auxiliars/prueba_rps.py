@@ -1,7 +1,6 @@
 import numpy as np
 
 def main(true_labels, predicted_probs):
-    print('estoy en el de la puntuación')
     """
     Calcula el Rank Probability Score (RPS) para un problema de clasificación con múltiples clases.
 
